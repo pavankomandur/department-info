@@ -8,6 +8,7 @@ import com.tential.departmentinfo.repository.DepartmentRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -17,6 +18,9 @@ import org.springframework.web.bind.annotation.*;
 public class DepartmentController {
 
     @Autowired
+    Environment environment;
+
+    @Autowired
     private DepartmentRepository repository;
     static final Logger log = LoggerFactory.getLogger(DepartmentController.class);
     /*
@@ -24,6 +28,7 @@ public class DepartmentController {
      */
     @GetMapping(path = {"/{id}"})
     public ResponseEntity<Department> findById(@PathVariable long id) throws Exception{
+        System.out.println("Environmental Variables from Application Properties file are " + environment.getProperty("testing.variable"));
         if (!repository.findById(id).isPresent()) throw new DepartmentNotFoundException();
         return repository.findById(id)
                 .map(record -> ResponseEntity.ok().body(record))
@@ -32,6 +37,7 @@ public class DepartmentController {
 
     @GetMapping
     public ResponseEntity<DepartmentInfo> findAll() throws Exception{
+        System.out.println("Environmental Variables from Application Properties file are " + environment.getProperty("testing.variable"));
         DepartmentInfo deptInfo=new DepartmentInfo();
         deptInfo.setDeptList(repository.findAll());
         return new ResponseEntity<DepartmentInfo>(deptInfo, HttpStatus.OK);
