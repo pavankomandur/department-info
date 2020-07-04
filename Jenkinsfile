@@ -1,32 +1,23 @@
 pipeline {
     agent any
-
+    tools {
+        maven 'M2_HOME'
+        jdk 'JAVA_HOME'
+    }
     stages {
-        stage('Compile Stage') {
+        stage ('Initialize') {
             steps {
-                withMaven(maven : 'M2_HOME') {
-                    sh 'mvn clean compile'
-                }
-               }
-        }
-
-        stage('Testing Stage') {
-            steps {
-                 withMaven(maven : 'M2_HOME') {
-                                     sh 'mvn test'
-                                 }
+                sh '''
+                    echo "PATH = ${PATH}"
+                    echo "M2_HOME = ${M2_HOME}"
+                '''
             }
         }
 
-        stage('Deployment Stage') {
-                    steps {
-                         withMaven(maven : 'M2_HOME') {
-                                             sh 'mvn deploy'
-                                         }
-                    }
-                }
+        stage ('Build') {
+            steps {
+                echo 'This is a minimal pipeline.'
+            }
+        }
     }
-
-
-
 }
